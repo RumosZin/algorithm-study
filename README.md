@@ -27,6 +27,8 @@ I want to share the number of the problem I solved and my solution in this repos
 - JOIN
 - String, Date
 
+[삼성 SW 역량 테스트 기출 문제](https://www.acmicpc.net/workbook/view/1152)
+
 [solved.ac > 문제 > CLASS](https://solved.ac/class)
 
 - CLASS 1
