@@ -1,0 +1,13 @@
+*.obj
+
+*.vsidx
+
+*.lock
+
+*.suo
+
+*.ipch
+
+*.tlog
+
+*.db
