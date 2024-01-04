@@ -10,4 +10,10 @@
 
 *.tlog
 
-*.db
+*.db-*
+
+*.pdb
+
+*.opendb
+
+*.VC.db
