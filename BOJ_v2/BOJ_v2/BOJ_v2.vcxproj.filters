@@ -27,5 +27,11 @@
     <ClCompile Include="S4_1158.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="S5_1010.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="S3_1003.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
