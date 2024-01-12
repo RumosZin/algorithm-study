@@ -10,12 +10,12 @@ from git import Repo
 
 
 # 관리할 폴더
-PLATFORMS = ["BOJ"]
+PLATFORMS = ["baekjoon", "programmers"]  # , "softeer"]
 
 # git 활용
 GIT_REPO = Repo.init("../")
 GIT_BRANCH = GIT_REPO.active_branch
-GIT_BASE_DIR = f"https://github.com/RumosZin/algorithm-study/blob/{GIT_REPO.head.commit}"
+GIT_BASE_DIR = f"https://github.com/woodywarhol9/algorithm-practice/blob/{GIT_REPO.head.commit}"
 
 
 class FileInfo:

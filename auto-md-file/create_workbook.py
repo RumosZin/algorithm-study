@@ -12,7 +12,7 @@ from git import Repo
 
 
 # 관리할 폴더
-PLATFORMS = ["BOJ"]
+PLATFORMS = ["BOJ"]  # , "softeer"]
 
 # git 활용
 GIT_REPO = Repo.init("../")
@@ -21,17 +21,19 @@ GIT_BASE_DIR = f"https://github.com/RumosZin/algorithm-study/blob/{GIT_REPO.head
 
 
 class FileInfo:
-    def __init__(self, path: str, platform: str, dt: str, difficulty: str, *title: List[str]):
+    def __init__(self, path: str, platform: str, is_sol: str, dt: str, difficulty: str, *title: List[str]):
         """
         파일 정보 저장
-        - path : BOJ/G2_1167.cpp
-        - platform : BOJ
+        - path : programmers/solved/파일명.py
+        - platform : programmers
+        - is_sol : solved/retry
         - dt : 최초 커밋 날짜
-        - difficulty : _ 앞 parsing
-        - title : _ 뒤 parsing -> 실제 문제명 + 하이퍼링크
+        - difficulty : 난이도
+        - title : 파일명 -> 실제 문제명 + 하이퍼링크
         """
         self.path = path
         self.platform = platform
+        self.is_sol = is_sol
         self.dt = dt
         self.difficulty = difficulty
         self.title = "".join(*title)
@@ -101,7 +103,7 @@ class READMECreator:
         file_infos.sort(key=lambda x: (x.dt))
         md_lines = []
         for idx, file_info in enumerate(file_infos):
-            
+            sol = '✔️' if file_info.is_sol == "solved" else '❌'
             md_lines.append(
                 f"|{idx+1}|{file_info.dt}|{file_info.title}|[Link]({GIT_BASE_DIR}/{file_info.path})|{MD_DIFFICULTY[file_info.difficulty.upper()]}|{sol}|")
         # 마크다운 테이블 형식
