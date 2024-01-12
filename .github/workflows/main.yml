@@ -32,9 +32,9 @@ jobs:
     # README 업데이트 여부 확인
     - name: Run update_readme.py
       id: condition
-      working-directory: auto-readme # 실행할 폴더 정보
+      working-directory: auto-md-file # 실행할 폴더 정보
       run: |
-        python update_readme.py >> $GITHUB_OUTPUT
+        python update_workbook.py >> $GITHUB_OUTPUT
     # 변수 전달 됐는지 확인
     - name: Echo condition Var
       run: echo ${{steps.condition.outputs.DO_UPDATE}}
@@ -42,8 +42,8 @@ jobs:
     - name: Commit changes
       if: ${{steps.condition.outputs.DO_UPDATE == 'True'}}
       run: |
-        git config --global user.name 'woodywarhol9'
-        git config --global user.email 'woodywarhol9@gmail.com'
+        git config --global user.name 'RumosZin'
+        git config --global user.email 'gyunjin3@gmail.com'
         git add -A
         git commit -am "auto-update README.md"
     # push
