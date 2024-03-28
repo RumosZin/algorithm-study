@@ -17,3 +17,5 @@
 *.opendb
 
 *.VC.db
+
+*.sln
