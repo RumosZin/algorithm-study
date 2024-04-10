@@ -1,90 +1,88 @@
-//#include <iostream>
-//#include <queue>
-//#include <algorithm>
-//
-//using namespace std;
-//
-//int K; // ¸»ÀÌ µÉ ¼ö ÀÖ´Â È½¼ö
-//int W, H; // width, height
-//int graph[201][201]; // °İÀÚ¹«´Ì
-//int visited[201][201][30];
-//
-//struct location {
-//	int row, col;
-//	int moving;
-//	int horse;
-//};
-//
-//queue<location> q;
-//
-//int dx[4] = { 1, -1, 0, 0 };
-//int dy[4] = { 0, 0, 1, -1 };
-//
-//int hx[8] = { 1, 1, 2, 2, -1, -1, -2, -2 };
-//int hy[8] = { 2, -2, 1, -1, 2, -2, 1, -1 };
-//
-//int answer;
-//
-//int main() {
-//	cin >> K >> W >> H;
-//	answer = 0;
-//	bool find = false;
-//
-//	for (int i = 1; i <= H; i++) {
-//		for (int j = 1; j <= W; j++) {
-//			cin >> graph[i][j];
-//		}
-//	}
-//
-//	q.push({ 1, 1, 0, 0 });
-//	visited[1][1][0] = 1;
-//	
-//	while (!q.empty()) {
-//		int x = q.front().row;
-//		int y = q.front().col;
-//		int move = q.front().moving;
-//		int horsemove = q.front().horse;
-//		//cout << "(" << x << ", " << y << ", " << horsemove << ") ";
-//
-//		q.pop();
-//
-//		if (x == H && y == W) {
-//			cout << move;
-//			find = true;
-//			break;
-//		}
-//
-//		for (int d = 0; d < 4; d++) {
-//			int next_x = x + dx[d];
-//			int next_y = y + dy[d];
-//
-//			if (next_x >= 1 && next_x <= H
-//				&& next_y >= 1 && next_y <= W
-//				&& graph[next_x][next_y] != 1
-//				&& visited[next_x][next_y][horsemove] != 1) {
-//
-//				q.push({ next_x, next_y, move + 1, horsemove });
-//				visited[next_x][next_y][horsemove] = 1;
-//				//cout << "(" << next_x << ", " << next_y << ", " << horsemove << ")";
-//			}
-//		}
-//
-//		for (int h = 0; h < 8; h++) {
-//			int next_x = x + hx[h];
-//			int next_y = y + hy[h];
-//
-//			if (next_x >= 1 && next_x <= H
-//				&& next_y >= 1 && next_y <= W
-//				&& graph[next_x][next_y] != 1
-//				&& visited[next_x][next_y][horsemove + 1] != 1
-//				&& horsemove < K) {
-//
-//				q.push({ next_x, next_y, move + 1, horsemove + 1 });
-//				visited[next_x][next_y][horsemove + 1] = 1;
-//				//cout << "(" << next_x << ", " << next_y << ")";
-//			}
-//		}
-//		//cout << "\n";
-//	}
-//	if(!find) cout << -1;
-//}
+#include <iostream>
+#include <queue>
+
+using namespace std;
+
+int K; // ë§ì²˜ëŸ¼ ì´ë™ ê°€ëŠ¥í•œ íšŸìˆ˜
+int W, H; // ê°€ë¡œ, ì„¸ë¡œ
+
+int board[201][201];
+int visited[201][201][31];
+
+int h_dx[8] = { 2, 1, -1, -2, -2, -1, 1, 2 };
+int h_dy[8] = { 1, 2, 2, 1, -1, -2, -2, -1 };
+
+int n_dx[4] = { 0, 0, 1, -1 };
+int n_dy[4] = { 1, -1, 0, 0 };
+int answer = -1;
+
+typedef struct monkey {
+    int row, col, k, dist;
+};
+
+queue<monkey> q;
+
+void bfs() {
+    while (!q.empty()) {
+        int row = q.front().row;
+        int col = q.front().col;
+        int k = q.front().k; // left value
+        int dist = q.front().dist;
+
+        q.pop();
+
+        // stop condition
+        if (row == H - 1 && col == W - 1) {
+            answer = dist;
+            return;
+        }
+
+        if (k > 0) {
+            for (int d = 0; d < 8; d++) {
+                int next_row = row + h_dx[d];
+                int next_col = col + h_dy[d];
+
+                if (next_row >= 0 && next_row < H
+                    && next_col >= 0 && next_col < W
+                    && visited[next_row][next_col][k - 1] != 1
+                    && board[next_row][next_col] != 1) {
+                    visited[next_row][next_col][k - 1] = 1;
+                    q.push({ next_row, next_col, k - 1, dist + 1 });
+                }
+            }
+        }
+
+        for (int d = 0; d < 4; d++) {
+            int next_row = row + n_dx[d];
+            int next_col = col + n_dy[d];
+
+            if (next_row >= 0 && next_row < H
+                && next_col >= 0 && next_col < W
+                && board[next_row][next_col] != 1
+                && visited[next_row][next_col][k] != 1) {
+                visited[next_row][next_col][k] = 1;
+                q.push({ next_row, next_col, k, dist + 1 });
+            }
+
+        }
+    }
+}
+
+int main() {
+
+    // input
+    cin >> K >> W >> H;
+
+    for (int i = 0; i < H; i++) {
+        for (int j = 0; j < W; j++) {
+            cin >> board[i][j];
+        }
+    }
+
+    // start with (0, 0, 0)
+    visited[0][0][K] = 1;
+    q.push({ 0, 0, K, 0 });
+    bfs();
+   
+    cout << answer;
+}
