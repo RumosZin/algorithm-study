@@ -3,105 +3,133 @@
 
 using namespace std;
 
-struct INFO {
+int N, M; // height, width
+
+typedef struct INFO {
     int ry, rx, by, bx, count;
 };
 
+queue<INFO> q;
+
 INFO start;
+char board[10][10];
+int visited[10][10][10][10] = { 0, };
 
-char map[11][11];
+int dy[4] = {0, 0, 1, -1};
+int dx[4] = {1, -1, 0, 0};
 
-int dy[4] = { -1, 1, 0, 0};
-int dx[4] = {0, 0, -1, 1};
+int answer = -1;
 
 int bfs() {
-    int visited[10][10][10][10] = {0, }; // ry, rx, by, bx
-    queue<INFO> q;
+
     q.push(start);
-    visited[start.ry][start.rx][start.by][start.bx];
+    visited[start.ry][start.rx][start.by][start.bx] = 1;
 
-    int ret = -1;
-
-    while(!q.empty()) {
-        INFO current = q.front();
+    while (!q.empty()) {
+        INFO cur = q.front();
         q.pop();
 
-        if(current.count > 10) break;
-        if(map[current.ry][current.rx] == 'O' && map[current.by][current.bx] != 'O') {
-            ret = current.count;
+        // fail condition
+        if (cur.count > 10) break;
+
+        // success condition
+        if (board[cur.ry][cur.rx] == 'O' && board[cur.by][cur.bx] != 'O') { 
+            answer = cur.count;
             break;
         }
 
-        for(int d = 0; d < 4; d++) {
-            int next_ry = current.ry;
-            int next_rx = current.rx;
-            int next_by = current.by;
-            int next_bx = current.bx;
+        // find next position
+        for (int d = 0; d < 4; d++) {
+            int next_ry = cur.ry;
+            int next_rx = cur.rx;
+            int next_by = cur.by;
+            int next_bx = cur.bx;
 
-            // RED
-            while(1) {
-                if(map[next_ry][next_rx] != '#' && map[next_ry][next_rx] != 'O') {
-                    next_ry += dy[d];
-                    next_rx += dx[d];
+            // RED moving
+            while (1) {
+                // until wall or hole
+                if (board[next_ry][next_rx] != '#' && board[next_ry][next_rx] != 'O') {
+                    next_ry += dy[d], next_rx += dx[d];
                 }
                 else {
-                    if(map[next_ry][next_rx] == '#') {
-                    next_ry -= dy[d];
-                    next_rx -= dx[d];                      
-
+                    if (board[next_ry][next_rx] == '#') {
+                        next_ry -= dy[d], next_rx -= dx[d];
                     }
                     break;
                 }
-
             }
-            
-            // BLUE
-            while(1) {
-                if(map[next_by][next_bx] != '#' && map[next_by][next_bx] != 'O') {
-                    next_by += dy[d];
-                    next_bx += dx[d];
+
+            // BLUE moving
+            while (1) {
+                // until wall or hole
+                if (board[next_by][next_bx] != '#' && board[next_by][next_bx] != 'O') {
+                    next_by += dy[d], next_bx += dx[d];
                 }
                 else {
-                    if(map[next_by][next_bx] == '#') {
-                    next_by -= dy[d];
-                    next_bx -= dx[d];                      
-
+                    if (board[next_by][next_bx] == '#') {
+                        next_by -= dy[d], next_bx -= dx[d];
                     }
                     break;
                 }
+            }
 
+            // RED, BLUE positon check
+            if (next_rx == next_bx && next_ry == next_by) { 
+                if (board[next_ry][next_rx] != 'O') { 
+                    int red_dist = abs(next_ry - cur.ry) + abs(next_rx - cur.rx);
+                    int blue_dist = abs(next_by - cur.by) + abs(next_bx - cur.bx);
+                    if (red_dist > blue_dist) {
+                        next_ry -= dy[d];
+                        next_rx -= dx[d];
+                    }
+                    else {
+                        next_by -= dy[d];
+                        next_bx -= dx[d];
+                    }
+                }
+            }
+
+            if (visited[next_ry][next_rx][next_by][next_bx] == 0) {
+                visited[next_ry][next_rx][next_by][next_bx] = 1;
+                INFO next;
+                next.ry = next_ry;
+                next.rx = next_rx;
+                next.by = next_by;
+                next.bx = next_bx;
+                next.count = cur.count + 1;
+                q.push(next);
             }
         }
 
     }
-
-    return ret;
-
+    return answer;
 }
 
 int main() {
-
+    
     // input
-    int N, M;
     cin >> N >> M;
-    for(int y = 0; y < N; y++) {
+
+    for (int i = 0; i < N; i++) {
         string input;
         cin >> input;
-        for(int x = 0; x < M; x++) {
-            map[y][x] = input[j];
+        for (int j = 0; j < M; j++) {
+            board[i][j] = input[j];
 
-            if(map[y][x] == 'R') {
-                start.ry = y; start.rx = x;
+            // start INFO initialize
+            if (board[i][j] == 'R') {
+                start.ry = i;
+                start.rx = j;
             }
-            if(map[y][x] == 'B') {
-                start.by = y; start.bx = x;
+            if (board[i][j] == 'B') {
+                start.by = i;
+                start.bx = j;
             }
         }
     }
 
+    // start INFO initialize
     start.count = 0;
 
-    cout <<  bfs();
-
-    return 0;
+    cout << bfs();
 }
