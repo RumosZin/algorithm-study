@@ -7,16 +7,17 @@ using namespace std;
 
 int main() {
 
-	// 1. input
+	// input
 	string input;
 	getline(cin, input);
 
-	// 2. parsing - tag / word
+	// parsing
 	bool tag = false;
 	vector<char> word;
+
 	for (int i = 0; i < input.size(); i++) {
 
-		// tag '>'까지 찾아서 그대로 출력
+		// TAG
 		if (input[i] == '<') {
 			
 			if (word.size() != 0) {
@@ -31,19 +32,17 @@ int main() {
 			continue;
 		}
 		else if (input[i] == '>') {
-			tag = false;
-			
+			tag = false;			
 			cout << input[i];
 			continue;
 		}
-		else if(tag == true) {
-			
+		else if(tag == true) {			
 			cout << input[i];
 			continue;
 		}
 		
 
-		// word는 담았다가 reverse 해서 출력
+		// WORD
 		else if (input[i] == ' ' || input[i] == '<') {
 			if (word.size() != 0) {
 				reverse(word.begin(), word.end());
@@ -59,6 +58,7 @@ int main() {
 		word.push_back(input[i]);
 	}
 
+    // last WORD
 	if (word.size() != 0) {
 		reverse(word.begin(), word.end());
 		for (int i = 0; i < word.size(); i++) {
