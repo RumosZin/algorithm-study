@@ -26,10 +26,7 @@ int main() {
     }
 
     // two pointer
-    int low = 0;
     int high = 0;
-    m[low] = 1;
-    m[high] = 1;
 
    for(int low = 0; low < N; low++) {
         // low를 고정시키고 high를 증가시키며 최대로 이동
