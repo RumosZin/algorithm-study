@@ -8,7 +8,7 @@ int N;
 vector<pair<long long, long long>> v;
 int answer = 0;
 
-bool custom_compare(pair<long long, long long> a, pair<long long, long long> b) {
+bool cmp(pair<long long, long long> a, pair<long long, long long> b) {
 	if (a.second < b.second) return true;
 	else if (a.second > b.second) return false;
 	else {
@@ -27,28 +27,26 @@ int main() {
 		v.push_back({ start, end });
 	}
 
-	// Á¤·ÄÀÇ ±âÁØ? -> ³¡³ª´Â ½Ã°£ÀÌ »¡¶ó¾ß, µÚ¿¡ ´õ ¸¹Àº °ÍµéÀ» Ã¤¿ï ¼ö ÀÖÀ½!!
-	// => Áï, ±×¸®µğ ¾Ë°í¸®ÁòÀ» »ç¿ëÇØ¾ß ÇÔ
+	// ëë‚˜ëŠ” ì‹œê°„ì´ ì´ë¥¸ ìˆœìœ¼ë¡œ ì •ë ¬
+	sort(v.begin(), v.end(), cmp);
 
-	// 1. ³¡³ª´Â ½Ã°£ ±âÁØ Á¤·Ä
-	sort(v.begin(), v.end(), custom_compare);
+	for(int i = 0; i < v.size(); i++) {
+		cout << v[i].first << " " << v[i].second << "\n";
+	}
 
-	// 2. v[0]ºÎÅÍ ¼±ÅÃÇØ¼­ °³¼ö ¼¼±â
 	int current_start;
 	int current_end;
+
 	for (int i = 0; i < N; i++) {
 		if (i == 0) {
-
-			//cout << v[i].first << " " << v[i].second << "\n";
 			answer++;
-			current_start = v[i].first;
-			current_end = v[i].second;
+			current_start = v[i].first; // í˜„ì¬ ì‹œì‘ ì‹œê°„
+			current_end = v[i].second; // í˜„ì¬ ì¢…ë£Œ ì‹œê°„
 			continue;
 		}
 		
 		else {
-			if (v[i].first >= current_end) {
-				//cout << v[i].first << " " << v[i].second << "\n";
+			if (v[i].first >= current_end) { // í˜„ì¬ ì¢…ë£Œ ì‹œê°„ë³´ë‹¤ ë‹¤ìŒ ìˆ˜ì—…ì´ ëŠ¦ê²Œ ì‹œì‘í•  ë•Œ
 				answer++;
 				current_start = v[i].first;
 				current_end = v[i].second;
@@ -58,9 +56,5 @@ int main() {
 		}
 	}
 
-	//for (int i = 0; i < N; i++) cout << "\t" << v[i].first << " " << v[i].second << " " << "\n";
-
 	cout << answer;
-
-	
 }
