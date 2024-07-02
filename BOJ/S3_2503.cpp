@@ -2,58 +2,57 @@
 
 using namespace std;
 
-int N, num, strike, ball;
-bool answer[1001] = {true, };
+bool fail[1000]; // 후보 거르기
+int a, b;
+int ans = 0;
+int N, strike, ball;
 
-string current_num;
-int strike_count, ball_count, cnt = 0;
-    
-int main(){
-    // input
-    cin >> N;
+void check(string str, int st, int ba){
 
-    for(int i = 123; i <= 987; i++){ // 어느 두 숫자도 겹칠 수 없고, 세 자리 수ㄴ
-        current_num = to_string(i);
-        
-        /**
-         * 어느 두 숫자가 같으면 안 됨
-        */
-        if(current_num[0] == current_num[1] || current_num[1] == current_num[2] || current_num[0] == current_num[2]) answer[i] = false;
-
-        /**
-         * 0을 포함하는 경우 답이 될 수 없음
-        */
-        if(current_num[0] - '0'  == 0 || current_num[1] - '0'  == 0 || current_num[2] - '0' == 0) answer[i] = false; 
+    for(int i = 123; i < 988; i++){ // 989부터는 숫자 후보가 아님
+        if(fail[i]) continue;
+        a = 0, b = 0;
+        string tmp = to_string(i);
+        for(int k = 0; k < 3; k++){
+            for(int s = 0; s < 3; s++){
+                if(str[s] == tmp[k]){
+                    if(s == k) a++;
+                    else b++;
+                }   
+            }
+        }
+        if(a != st || b != ba) {
+            fail[i] = true;
+        }
     }
-    
-    for(int i = 1; i <= N; i++){
-        cin >> num >> strike >> ball;
+}
 
-        for(int i = 123; i <= 987; i++){
-            strike_count = 0;
-            ball_count = 0;
-            
-            if(answer[i]){ // 앞서 제외된 케이스가 아닌 것에 대해 수행
-                string number = to_string(num);
-                string current_case = to_string(i);
-    
-                for(int a = 0; a < 3; a++){
-                    for(int b = 0; b < 3; b++){
-                        if(a == b && number[a] == current_case[b]) strike_count++;
-                        if(a != b && number[a] == current_case[b]) ball_count++;
-                    }
-                }
-                
-                if(strike_count != strike || ball_count != ball) answer[i] = false;
+int main(void){
+	ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+
+    // initialize
+    for(int i = 0; i < 1000; i++) fail[i]=false;
+
+    // input
+    string current_num;
+    cin >> N;
+    for(int i = 0; i < N; i++){
+        cin >> current_num >> strike >> ball;
+        check(current_num, strike, ball);
+    }
+
+    int num;
+    for(int i = 1; i < 10; i++){
+        for(int j = 1; j < 10; j++){
+            if(i == j) continue;
+            for(int k = 1; k < 10; k++){
+                if(k == i || k == j) continue;
+                num = i * 100 + j*10 + k;
+                if(!fail[num]) ans++;
             }
         }
     }
-    
-    for(int i = 123; i <= 987; i++) {
-        if(answer[i]) cnt++;
-    }
-    
-    cout << cnt;
-    
+
+    cout << ans;
     return 0;
 }
