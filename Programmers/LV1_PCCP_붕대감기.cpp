@@ -46,11 +46,9 @@ int solution(vector<int> bandage, int health, vector<vector<int>> attacks) {
         // 연속 공격 성공 시 체력 증가
         if(seq == band_time) {
             seq = 0;
-            if(health + y <= max_health) health += y; // 이거,, 그리고 등호
-            else health = max_health; // 이거
+            if(health + y <= max_health) health += y;
+            else health = max_health;
         }
-        
-        cout << t << ": " << health << " " << seq << "\n";
     }
     
     if(health <= 0) answer = -1;
