@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #define MAX 987654321
 
-using namespace std; // 3:55 - 4:50
+using namespace std; // 3:55
 
 int N, M;
 int arr[51][51];
@@ -33,18 +33,21 @@ int main() {
     
     // 2. do-while next_permutation
     do {
+        picked.clear();
         answer = 0;
+        for(int i = 0; i < tmp.size(); i++) {
+            if(tmp[i] == 0) picked.push_back(chickens[i]);
+        }
+
         // picked에 대해서 집과 picked의 치킨 거리 계산
         // 집 하나 - 모든 치킨거리 구하기 - 최솟값 더하기
         for(int i = 0; i < cities.size(); i++) {
             int dist = MAX;
-            for(int j = 0; j < tmp.size(); j++) {
-                if(tmp[j] != 0) continue; 
-                dist = min(dist, abs(cities[i].first - chickens[j].first) + abs(cities[i].second - chickens[j].second));
+            for(int j = 0; j < picked.size(); j++) {
+                dist = min(dist, abs(cities[i].first - picked[j].first) + abs(cities[i].second - picked[j].second));
             }
             answer += dist;
         }
-         
         correct.push_back(answer);
         
     } while(next_permutation(tmp.begin(), tmp.end()));
